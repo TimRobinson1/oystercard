@@ -15,7 +15,7 @@ describe Oystercard do
     end
 
     it 'with no journeys' do
-      expect(card.journeys).to eq ({})
+      expect(card.journeys).to be_empty
     end
   end
 
@@ -77,7 +77,7 @@ describe Oystercard do
     end
 
     it 'removes minimum fare from balance' do
-      expect{card.touch_out(station)}.to change{card.balance}.by(-1)
+      expect { card.touch_out(station) }.to change { card.balance }.by(-1)
     end
 
     it 'sets entry station to nil' do
@@ -87,7 +87,8 @@ describe Oystercard do
 
     it 'records entry and exit stations as one journey' do
       card.touch_out(exit_station)
-      expect(card.journeys).to eq ({station => exit_station})
+      hash = { station => exit_station }
+      expect(card.journeys).to eq hash
     end
   end
 end
