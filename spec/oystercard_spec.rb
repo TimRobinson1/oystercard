@@ -2,6 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:card) { described_class.new }
+  let(:station) { double(:station) }
 
   it { is_expected.to respond_to :balance }
   it { is_expected.to respond_to :top_up }
@@ -41,27 +42,40 @@ describe Oystercard do
   describe '#touch_in' do
     it 'sets journey status to true' do
       card.top_up(30)
-      card.touch_in
+      card.touch_in(station)
       expect(card).to be_in_journey
     end
 
     it 'raises error if current balance is below minimum' do
-      expect { card.touch_in }.to raise_error 'Balance too low to travel'
+      message = 'Balance too low to travel'
+      expect { card.touch_in(station) }.to raise_error message
+    end
+
+    it 'records entry station' do
+      card.top_up(30)
+      card.touch_in(station)
+      expect(card.entry_station).to eq station
     end
   end
 
   describe '#touch_out' do
-    it 'sets journey status to false' do
+    before do
       card.top_up(30)
-      card.touch_in
+      card.touch_in(station)
+    end
+
+    it 'sets journey status to false' do
       card.touch_out
       expect(card).not_to be_in_journey
     end
 
     it 'removes minimum fare from balance' do
-      card.top_up(10)
-      card.touch_in
       expect{card.touch_out}.to change{card.balance}.by(-1)
+    end
+
+    it 'sets entry station to nil' do
+      card.touch_out
+      expect(card.entry_station).to eq nil
     end
   end
 end
