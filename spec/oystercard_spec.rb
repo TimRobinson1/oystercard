@@ -3,13 +3,20 @@ require 'oystercard'
 describe Oystercard do
   subject(:card) { described_class.new }
   let(:station) { double(:station) }
+  let(:exit_station) { double(:station) }
 
   it { is_expected.to respond_to :balance }
   it { is_expected.to respond_to :top_up }
   it { is_expected.to respond_to :in_journey? }
 
-  it 'has a starting balance of 0' do
-    expect(card.balance).to eq 0
+  context 'starts with' do
+    it 'a balance of 0' do
+      expect(card.balance).to eq 0
+    end
+
+    it 'with no journeys' do
+      expect(card.journeys).to eq ({})
+    end
   end
 
   describe '#top_up' do
@@ -65,17 +72,22 @@ describe Oystercard do
     end
 
     it 'sets journey status to false' do
-      card.touch_out
+      card.touch_out(station)
       expect(card).not_to be_in_journey
     end
 
     it 'removes minimum fare from balance' do
-      expect{card.touch_out}.to change{card.balance}.by(-1)
+      expect{card.touch_out(station)}.to change{card.balance}.by(-1)
     end
 
     it 'sets entry station to nil' do
-      card.touch_out
+      card.touch_out(station)
       expect(card.entry_station).to eq nil
+    end
+
+    it 'records entry and exit stations as one journey' do
+      card.touch_out(exit_station)
+      expect(card.journeys).to eq ({station => exit_station})
     end
   end
 end
