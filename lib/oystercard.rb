@@ -2,6 +2,7 @@ class Oystercard
   attr_reader :balance
 
   BALANCE_LIMIT = 90
+  TRAVEL_MIN = 1
 
   def initialize
     @balance = 0
@@ -22,6 +23,7 @@ class Oystercard
   end
 
   def touch_in
+    raise 'Balance too low to travel' if low_balance?
     @in_use = true
   end
 
@@ -33,5 +35,9 @@ class Oystercard
 
   def limit_reached?(amount)
     @balance + amount > BALANCE_LIMIT
+  end
+
+  def low_balance?
+    @balance < TRAVEL_MIN
   end
 end

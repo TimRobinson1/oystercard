@@ -49,13 +49,19 @@ describe Oystercard do
 
   describe '#touch_in' do
     it 'sets journey status to true' do
+      card.top_up(30)
       card.touch_in
       expect(card).to be_in_journey
+    end
+
+    it 'raises error if current balance is below minimum' do
+      expect { card.touch_in }.to raise_error 'Balance too low to travel'
     end
   end
 
   describe '#touch_out' do
     it 'sets journey status to false' do
+      card.top_up(30)
       card.touch_in
       card.touch_out
       expect(card).not_to be_in_journey
