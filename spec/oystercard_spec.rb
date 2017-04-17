@@ -5,7 +5,6 @@ describe Oystercard do
 
   it { is_expected.to respond_to :balance }
   it { is_expected.to respond_to :top_up }
-  it { is_expected.to respond_to :deduct }
   it { is_expected.to respond_to :in_journey? }
 
   it 'has a starting balance of 0' do
@@ -33,14 +32,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'should remove correct amount from balance' do
-      card.top_up(80)
-      card.deduct(10)
-      expect(card.balance).to eq 70
-    end
-  end
-
   describe '#in_journey?' do
     it 'returns false when not in use' do
       expect(card.in_journey?).to eq false
@@ -65,6 +56,12 @@ describe Oystercard do
       card.touch_in
       card.touch_out
       expect(card).not_to be_in_journey
+    end
+
+    it 'removes minimum fare from balance' do
+      card.top_up(10)
+      card.touch_in
+      expect{card.touch_out}.to change{card.balance}.by(-1)
     end
   end
 end
