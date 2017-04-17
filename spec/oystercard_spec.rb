@@ -5,6 +5,7 @@ describe Oystercard do
 
   it { is_expected.to respond_to :balance }
   it { is_expected.to respond_to :top_up }
+  it { is_expected.to respond_to :deduct }
 
   it 'has a starting balance of 0' do
     expect(card.balance).to eq 0
@@ -17,7 +18,6 @@ describe Oystercard do
     end
 
     describe 'raises error' do
-
       it 'when increased over limit' do
         message = "Limit of £#{Oystercard::BALANCE_LIMIT} reached"
         expect { card.top_up(91) }.to raise_error message
@@ -29,6 +29,14 @@ describe Oystercard do
         card.top_up(45)
         expect { card.top_up(10) }.to raise_error message
       end
+    end
+  end
+
+  describe '#deduct' do
+    it 'should remove correct amount from balance' do
+      card.top_up(80)
+      card.deduct(10)
+      expect(card.balance).to eq 70
     end
   end
 end
