@@ -1,4 +1,6 @@
 require 'oystercard'
+require 'journey'
+require 'date'
 
 describe Oystercard do
 
@@ -22,6 +24,9 @@ describe Oystercard do
   end
 
   describe '#top_up' do
+
+
+
     it 'can add to the balance' do
       card.top_up(10)
       expect(card.balance).to eq 10
@@ -49,10 +54,22 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
+
+    before do
+      allow(station).to receive_messages(:name => "Old Street", :zone => 1)
+    end
+
+
     it 'sets journey status to true' do
       card.top_up(30)
       card.touch_in(station)
       expect(card).to be_in_journey
+    end
+
+    it 'here' do
+      allow(station).to receive(:name)
+      card.top_up(5)
+      expect(card.touch_in(station)).to be_kind_of Journey
     end
 
     it 'raises error if current balance is below minimum' do
@@ -68,8 +85,11 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
+
     before do
       card.top_up(30)
+      allow(station).to receive_messages(:name => "Old Street", :zone => 1)
+      allow(journey).to receive_messages(:entry_station => "Old Street", :entry_zone => 1)
       card.touch_in(station)
     end
 
@@ -84,12 +104,14 @@ describe Oystercard do
 
     it 'sets entry station to nil' do
       card.touch_out(station)
-      expect(card.entry_station).to eq nil
+      expect(card.in_journey?).to be false
     end
 
     it 'records entry and exit stations as one journey' do
       card.touch_out(exit_station)
-      hash = { station => exit_station }
+      hash = { card.num_journies => [ journey.entry_station, journey.entry_zone ] }
+      #p hash
+      #p num
       expect(card.journeys).to eq hash
     end
   end
