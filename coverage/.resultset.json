@@ -44,6 +44,18 @@
         null,
         null
       ],
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/spec/journeylog_spec.rb": [
+        1,
+        null,
+        1,
+        null,
+        null
+      ],
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/lib/journey_log.rb": [
+        1,
+        null,
+        null
+      ],
       "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/spec/oystercard_spec.rb": [
         1,
         1,
@@ -71,9 +83,6 @@
         null,
         null,
         1,
-        null,
-        null,
-        null,
         1,
         1,
         1,
@@ -101,19 +110,16 @@
         null,
         null,
         1,
-        null,
         1,
         4,
         4,
         null,
         null,
-        null,
         1,
         1,
         1,
         null,
         null,
-        1,
         1,
         1,
         null,
@@ -131,7 +137,6 @@
         null,
         null,
         1,
-        null,
         1,
         5,
         5,
@@ -280,6 +285,6 @@
         null
       ]
     },
-    "timestamp": 1492529404
+    "timestamp": 1492530339
   }
 }

@@ -24,9 +24,6 @@ describe Oystercard do
   end
 
   describe '#top_up' do
-
-
-
     it 'can add to the balance' do
       card.top_up(10)
       expect(card.balance).to eq 10
@@ -54,12 +51,10 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
-
     before do
       card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
     end
-
 
     it 'sets journey status to true' do
       card.touch_in(station)
@@ -67,7 +62,6 @@ describe Oystercard do
     end
 
     it 'here' do
-      allow(station).to receive(:name)
       expect(card.touch_in(station)).to be_kind_of Journey
     end
 
@@ -84,7 +78,6 @@ describe Oystercard do
   end
 
   describe '#touch_out' do
-
     before do
       card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
@@ -99,7 +92,7 @@ describe Oystercard do
     end
 
     it 'removes minimum fare from balance' do
-      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-1)
+      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-Oystercard::MINIMUM_FARE)
     end
 
     it 'sets entry station to nil' do
