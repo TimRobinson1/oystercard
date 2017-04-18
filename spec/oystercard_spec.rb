@@ -56,31 +56,30 @@ describe Oystercard do
   describe '#touch_in' do
 
     before do
+      card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
     end
 
 
     it 'sets journey status to true' do
-      card.top_up(30)
       card.touch_in(station)
       expect(card).to be_in_journey
     end
 
     it 'here' do
       allow(station).to receive(:name)
-      card.top_up(5)
       expect(card.touch_in(station)).to be_kind_of Journey
     end
 
     it 'raises error if current balance is below minimum' do
+      card.top_up(-30)
       message = 'Balance too low to travel'
       expect { card.touch_in(station) }.to raise_error message
     end
 
-    it 'records entry station' do
-      card.top_up(30)
+    it 'charges penalty when touching in twice' do
       card.touch_in(station)
-      expect(card.entry_station).to eq station
+      expect{card.touch_in(station)}.to change{card.balance}.by(-Oystercard::PENALTY)
     end
   end
 
@@ -89,7 +88,7 @@ describe Oystercard do
     before do
       card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
-      allow(journey).to receive_messages(:entry_station => "Old Street", :entry_zone => 1)
+      allow(journey).to receive_messages(:entry_station => "Old Street", :entry_zone => 1, :exit_station => "Aldgate East", :exit_zone => 3)
       card.touch_in(station)
     end
 
@@ -108,11 +107,16 @@ describe Oystercard do
     end
 
     it 'records entry and exit stations as one journey' do
+      allow(exit_station).to receive_messages(:name => "Aldgate East", :zone => 3)
+      card.touch_in(station)
       card.touch_out(exit_station)
-      hash = { card.num_journies => [ journey.entry_station, journey.entry_zone ] }
-      #p hash
-      #p num
+      hash = { card.num_journies => [ journey.entry_station, journey.entry_zone, journey.exit_station, journey.exit_zone ] }
       expect(card.journeys).to eq hash
+    end
+
+    it 'charges penalty when touching out without touching in' do
+      card.touch_out(station)
+      expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::PENALTY - Oystercard::MINIMUM_FARE)
     end
   end
 end
