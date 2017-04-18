@@ -33,8 +33,8 @@ class Oystercard
   def touch_out(end_station)
     charge_penalty_out(end_station) unless in_journey?
     @num_journies += 1
+    deduct(fare)
     record_journey(end_station)
-    deduct(MINIMUM_FARE)
   end
 
   private
@@ -61,13 +61,19 @@ class Oystercard
   end
 
   def charge_penalty_in
-    @balance -= PENALTY
+    @journey = nil
+    @balance -= fare
     puts "You've didn't touch out! Charged: £#{PENALTY}"
   end
 
   def charge_penalty_out(station)
-    @balance -= PENALTY
+    @balance -= fare
     @journey = Journey.new(station.name, station.zone)
-    puts "You didn't touch in! Charged: £#{PENALTY+MINIMUM_FARE}"
+    puts "You didn't touch in! Charged: £#{PENALTY}"
   end
+
+  def fare
+     in_journey? ? MINIMUM_FARE : PENALTY
+  end
+
 end

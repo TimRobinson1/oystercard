@@ -1,7 +1,7 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/timrobinson/Desktop/Coding Projects/Git Projects/oystercard/spec/journey_spec.rb": [
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/spec/journey_spec.rb": [
         1,
         null,
         1,
@@ -29,7 +29,7 @@
         null,
         null
       ],
-      "/Users/timrobinson/Desktop/Coding Projects/Git Projects/oystercard/lib/journey.rb": [
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/lib/journey.rb": [
         1,
         1,
         null,
@@ -44,7 +44,7 @@
         null,
         null
       ],
-      "/Users/timrobinson/Desktop/Coding Projects/Git Projects/oystercard/spec/oystercard_spec.rb": [
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/spec/oystercard_spec.rb": [
         1,
         1,
         1,
@@ -53,7 +53,7 @@
         null,
         19,
         10,
-        2,
+        6,
         6,
         null,
         2,
@@ -137,6 +137,7 @@
         5,
         5,
         5,
+        5,
         null,
         null,
         1,
@@ -164,11 +165,12 @@
         1,
         1,
         4,
+        null,
         null,
         null,
         null
       ],
-      "/Users/timrobinson/Desktop/Coding Projects/Git Projects/oystercard/lib/oystercard.rb": [
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/lib/oystercard.rb": [
         1,
         1,
         null,
@@ -192,11 +194,10 @@
         null,
         null,
         1,
-        21,
+        30,
         null,
         null,
         1,
-        11,
         11,
         11,
         10,
@@ -235,16 +236,22 @@
         1,
         2,
         2,
+        2,
         null,
         null,
         1,
         1,
         1,
         1,
+        null,
+        null,
+        1,
+        9,
+        null,
         null,
         null
       ],
-      "/Users/timrobinson/Desktop/Coding Projects/Git Projects/oystercard/lib/station.rb": [
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/lib/station.rb": [
         1,
         1,
         null,
@@ -254,7 +261,7 @@
         null,
         null
       ],
-      "/Users/timrobinson/Desktop/Coding Projects/Git Projects/oystercard/spec/station_spec.rb": [
+      "/Users/Jaiye/Documents/Sites/Ruby/precourse/Projects/oystercard/spec/station_spec.rb": [
         1,
         null,
         1,
@@ -273,6 +280,6 @@
         null
       ]
     },
-    "timestamp": 1492525905
+    "timestamp": 1492529404
   }
 }

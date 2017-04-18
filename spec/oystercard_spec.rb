@@ -89,6 +89,7 @@ describe Oystercard do
       card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
       allow(journey).to receive_messages(:entry_station => "Old Street", :entry_zone => 1, :exit_station => "Aldgate East", :exit_zone => 3)
+      allow(exit_station).to receive_messages(:name => "Aldgate East", :zone => 3)
       card.touch_in(station)
     end
 
@@ -98,7 +99,7 @@ describe Oystercard do
     end
 
     it 'removes minimum fare from balance' do
-      expect { card.touch_out(station) }.to change { card.balance }.by(-1)
+      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-1)
     end
 
     it 'sets entry station to nil' do
@@ -118,5 +119,6 @@ describe Oystercard do
       card.touch_out(station)
       expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::PENALTY - Oystercard::MINIMUM_FARE)
     end
+
   end
 end
