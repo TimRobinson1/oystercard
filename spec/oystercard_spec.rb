@@ -1,9 +1,11 @@
 require 'oystercard'
 
 describe Oystercard do
+
   subject(:card) { described_class.new }
   let(:station) { double(:station) }
   let(:exit_station) { double(:station) }
+  let(:journey) { double(:journey) }
 
   it { is_expected.to respond_to :balance }
   it { is_expected.to respond_to :top_up }
