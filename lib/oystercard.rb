@@ -63,13 +63,11 @@ class Oystercard
   def charge_penalty_in
     @journey = nil
     @balance -= fare
-    puts "You've didn't touch out! Charged: £#{PENALTY}"
   end
 
   def charge_penalty_out(station)
     @balance -= fare
     @journey = Journey.new(station.name, station.zone)
-    puts "You didn't touch in! Charged: £#{PENALTY}"
   end
 
   def fare
