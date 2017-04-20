@@ -11,7 +11,6 @@ describe Oystercard do
 
   it { is_expected.to respond_to :balance }
   it { is_expected.to respond_to :top_up }
-  it { is_expected.to respond_to :in_journey? }
 
   context 'starts with' do
     it 'a balance of 0' do
@@ -44,21 +43,10 @@ describe Oystercard do
     end
   end
 
-  describe '#in_journey?' do
-    it 'returns false when not in use' do
-      expect(card.in_journey?).to eq false
-    end
-  end
-
   describe '#touch_in' do
     before do
       card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
-    end
-
-    it 'sets journey status to true' do
-      card.touch_in(station)
-      expect(card).to be_in_journey
     end
 
     it 'raises error if current balance is below minimum' do
@@ -82,18 +70,8 @@ describe Oystercard do
       card.touch_in(station)
     end
 
-    it 'sets journey status to false' do
-      card.touch_out(station)
-      expect(card).not_to be_in_journey
-    end
-
     it 'removes minimum fare from balance' do
       expect { card.touch_out(exit_station) }.to change { card.balance }.by(-Oystercard::MINIMUM_FARE)
-    end
-
-    it 'sets entry station to nil' do
-      card.touch_out(station)
-      expect(card.in_journey?).to be false
     end
 
     it 'charges penalty when touching out without touching in' do

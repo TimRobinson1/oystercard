@@ -9,12 +9,17 @@ class Journey
     @fare = PENALTY
   end
 
+  def underway?
+    !!@entry_station
+  end
+
   def finish(station)
     @fare = MIN_FARE
     record(station)
   end
 
   def record(station)
-    hash = {:entry_station => @entry_station, :exit_station => station}
+    entry, @entry_station = @entry_station, nil
+    hash = {:entry_station => entry, :exit_station => station}
   end
 end

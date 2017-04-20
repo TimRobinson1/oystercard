@@ -19,34 +19,18 @@ class Oystercard
     @balance += amount
   end
 
-  def in_journey?
-    !!@journey
-  end
-
   def touch_in(station)
     raise 'Balance too low to travel' if low_balance?
-    if journey
-      invalid_in(station)
-    else
-      @journey = Journey.new(station)
-    end
+    journey ? invalid_in(station) : @journey = Journey.new(station)
   end
 
   def touch_out(end_station)
-    if journey
-      valid_out(end_station)
-    else
-      invalid_out(station)
-    end
+    journey ? valid_out(end_station) : invalid_out(end_station)
   end
 
   private
 
-  def valid_in(station)
-
-  end
-
-  def valid_out(station)
+  def valid_out(end_station)
     @history << journey.finish(end_station)
     message = "Trip costed £#{journey.fare}"
     deduct(journey.fare)
@@ -54,7 +38,7 @@ class Oystercard
     message
   end
 
-  def invalid_out(station)
+  def invalid_out(end_station)
     @journey = Journey.new(nil)
     @history << journey.record(end_station)
     message = "Fine incurred. Trip costed £#{journey.fare}"

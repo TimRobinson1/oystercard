@@ -27,4 +27,11 @@ describe Journey do
       expect(journey.fare).to eq Journey::MIN_FARE
     end
   end
+
+  describe '#underway?' do
+    it 'returns boolean value based on whether a journey is active or not' do
+      journey.finish(station)
+      expect(journey.underway?).to eq false
+    end
+  end
 end
