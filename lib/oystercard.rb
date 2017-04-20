@@ -21,49 +21,33 @@ class Oystercard
 
   def touch_in(station)
     raise 'Balance too low to travel' if low_balance?
-    journey ? invalid_in(station) : @journey = Journey.new(station)
+    touch_out(nil) if @journey
+    @journey = Journey.new(station)
   end
 
-  def touch_out(end_station)
-    journey ? valid_out(end_station) : invalid_out(end_station)
+  def touch_out(station)
+    touch_in(nil) unless @journey
+    @history << @journey.finish(station)
+    journey_reset
   end
 
   private
-
-  def valid_out(end_station)
-    @history << journey.finish(end_station)
-    message = "Trip costed £#{journey.fare}"
-    deduct(journey.fare)
-    @journey = nil
-    message
-  end
-
-  def invalid_out(end_station)
-    @journey = Journey.new(nil)
-    @history << journey.record(end_station)
-    message = "Fine incurred. Trip costed £#{journey.fare}"
-    deduct(journey.fare)
-    @journey = nil
-    message
-  end
-
-  def invalid_in(station)
-    @history << journey.record(nil)
-    message = "Fine incurred. Trip costed £#{journey.fare}"
-    deduct(journey.fare)
-    @journey = Journey.new(station)
-    message
-  end
 
   def limit_reached?(amount)
     @balance + amount > BALANCE_LIMIT
   end
 
-  def low_balance?
-    @balance < MINIMUM_FARE
-  end
-
   def deduct(amount)
     @balance -= amount
+  end
+
+  def journey_reset
+    deduct(@journey.fare)
+    @journey = nil
+    "Journey complete."
+  end
+
+  def low_balance?
+    @balance < MINIMUM_FARE
   end
 end

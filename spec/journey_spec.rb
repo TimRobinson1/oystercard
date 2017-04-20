@@ -4,6 +4,7 @@ describe Journey do
 
   let(:station) { double :station }
   let(:new_station) { double :new_station }
+  let(:unstarted_journey) { described_class.new }
   subject(:journey) { described_class.new(station) }
 
   it 'starts with the penalty fare as default' do
@@ -14,13 +15,6 @@ describe Journey do
     expect(journey.entry_station).to eq station
   end
 
-  describe '#record_journey' do
-    it 'returns new finished journey as hash' do
-      hash = {:entry_station => station, :exit_station => new_station}
-      expect(journey.record(new_station)).to eq hash
-    end
-  end
-
   describe '#finish' do
     it 'sets the fare to minimum' do
       journey.finish(station)
@@ -28,10 +22,13 @@ describe Journey do
     end
   end
 
-  describe '#underway?' do
-    it 'returns boolean value based on whether a journey is active or not' do
-      journey.finish(station)
-      expect(journey.underway?).to eq false
+  describe '#in_progress?' do
+    it 'should start as false' do
+      expect(unstarted_journey.in_progress?).to be false
+    end
+
+    it 'should be true after being provided entry station' do
+      expect(journey.in_progress?).to be true
     end
   end
 end

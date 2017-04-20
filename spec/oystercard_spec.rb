@@ -45,17 +45,16 @@ describe Oystercard do
 
   describe '#touch_in' do
     before do
-      card.top_up(30)
       allow(station).to receive_messages(:name => "Old Street", :zone => 1)
     end
 
     it 'raises error if current balance is below minimum' do
-      card.top_up(-30)
       message = 'Balance too low to travel'
       expect { card.touch_in(station) }.to raise_error message
     end
 
     it 'charges penalty when touching in twice' do
+      card.top_up(30)
       card.touch_in(station)
       expect{card.touch_in(station)}.to change{card.balance}.by(-Oystercard::PENALTY)
     end
