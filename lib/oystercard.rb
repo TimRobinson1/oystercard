@@ -1,17 +1,16 @@
 require_relative 'station'
 require_relative 'journey'
+require_relative 'journey_log'
 
 class Oystercard
-  attr_reader :balance, :journey, :history
+  attr_reader :balance, :journey
 
   BALANCE_LIMIT = 90
-  MINIMUM_FARE = 1
-  PENALTY = 6
+  MIN_FARE = 1
 
   def initialize
     @balance = 0
-    @journey = nil
-    @history = []
+    @log = JourneyLog.new
   end
 
   def top_up(amount)
@@ -21,14 +20,17 @@ class Oystercard
 
   def touch_in(station)
     raise 'Balance too low to travel' if low_balance?
-    touch_out(nil) if @journey
-    @journey = Journey.new(station)
+    touch_out(nil) if @log.journey
+    @log.start(station)
   end
 
   def touch_out(station)
-    touch_in(nil) unless @journey
-    @history << @journey.finish(station)
-    journey_reset
+    @log.finish(station)
+    deduct(@log.total_fare)
+  end
+
+  def show_history
+    @log.journeys
   end
 
   private
@@ -41,13 +43,7 @@ class Oystercard
     @balance -= amount
   end
 
-  def journey_reset
-    deduct(@journey.fare)
-    @journey = nil
-    "Journey complete."
-  end
-
   def low_balance?
-    @balance < MINIMUM_FARE
+    @balance < MIN_FARE
   end
 end

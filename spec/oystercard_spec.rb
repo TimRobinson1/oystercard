@@ -17,8 +17,8 @@ describe Oystercard do
       expect(card.balance).to eq 0
     end
 
-    it 'with no history' do
-      expect(card.history).to be_empty
+    it 'with a journey log' do
+      expect(card.show_history).to be_empty
     end
   end
 
@@ -56,7 +56,7 @@ describe Oystercard do
     it 'charges penalty when touching in twice' do
       card.top_up(30)
       card.touch_in(station)
-      expect{card.touch_in(station)}.to change{card.balance}.by(-Oystercard::PENALTY)
+      expect{card.touch_in(station)}.to change{card.balance}.by(-Journey::PENALTY)
     end
   end
 
@@ -70,12 +70,12 @@ describe Oystercard do
     end
 
     it 'removes minimum fare from balance' do
-      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-Oystercard::MINIMUM_FARE)
+      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-Oystercard::MIN_FARE)
     end
 
     it 'charges penalty when touching out without touching in' do
       card.touch_out(station)
-      expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::PENALTY)
+      expect { card.touch_out(station) }.to change { card.balance }.by(-Journey::PENALTY)
     end
   end
 end
