@@ -69,8 +69,9 @@ describe Oystercard do
       card.touch_in(station)
     end
 
-    it 'removes minimum fare from balance' do
-      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-Oystercard::MIN_FARE)
+    it 'removes correct fare from balance' do
+      fare = ( -Oystercard::MIN_FARE - (station.zone - exit_station.zone).abs )
+      expect { card.touch_out(exit_station) }.to change { card.balance }.by(fare)
     end
 
     it 'charges penalty when touching out without touching in' do

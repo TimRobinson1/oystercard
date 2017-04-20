@@ -19,6 +19,6 @@ class Journey
 
   def fare
     return PENALTY if (!@entry_station || !@exit_station)
-    MIN_FARE
+    ( MIN_FARE + (@entry_station.zone - @exit_station.zone).abs )
   end
 end

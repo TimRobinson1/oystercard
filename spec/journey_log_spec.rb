@@ -18,6 +18,10 @@ describe JourneyLog do
   end
 
   describe '#finish' do
+    before do
+      allow(station).to receive(:zone).and_return(1)
+    end
+
     it 'removes a finished journey' do
       log.start(station)
       log.finish(station)
@@ -32,6 +36,10 @@ describe JourneyLog do
   end
 
   describe '#journeys' do
+    before do
+      allow(station).to receive(:zone).and_return(1)
+    end
+
     it 'starts with an empty history' do
       expect(log.journeys).to be_empty
     end
