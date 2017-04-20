@@ -4,12 +4,7 @@ class Journey
   MIN_FARE = 1
   PENALTY = 6
 
-  def initialize
-    @entry_station = nil
-    @exit_station = nil
-  end
-
-  def start(station = nil)
+  def start(station)
     @entry_station = station
   end
 
@@ -17,7 +12,7 @@ class Journey
     !!@entry_station
   end
 
-  def finish(station = nil)
+  def finish(station)
     @exit_station = station
     hash = {:entry_station => @entry_station, :exit_station => station}
   end
