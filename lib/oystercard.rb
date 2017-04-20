@@ -1,8 +1,8 @@
 require_relative 'station'
-require 'date'
+require_relative 'journey'
 
 class Oystercard
-  attr_reader :balance, :journeys, :journey, :num_journies
+  attr_reader :balance, :journey, :history
 
   BALANCE_LIMIT = 90
   MINIMUM_FARE = 1
@@ -10,9 +10,8 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @journeys = {}
     @journey = nil
-    @num_journies = 0
+    @history = []
   end
 
   def top_up(amount)
@@ -25,31 +24,39 @@ class Oystercard
   end
 
   def touch_in(station)
-    charge_penalty_in if in_journey?
     raise 'Balance too low to travel' if low_balance?
-    @journey = Journey.new(station.name, station.zone)
+    if journey
+      @history << journey.record(nil)
+      message = "Fine incurred. Trip costed £#{journey.fare}"
+      deduct(journey.fare)
+      @journey = Journey.new(station)
+      message
+    else
+      @journey = Journey.new(station)
+    end
   end
 
   def touch_out(end_station)
-    charge_penalty_out(end_station) unless in_journey?
-    @num_journies += 1
-    deduct(fare)
-    record_journey(end_station)
+    if journey
+      @history << journey.finish(end_station)
+      message = "Trip costed £#{journey.fare}"
+      deduct(journey.fare)
+      @journey = nil
+      message
+    else
+      @journey = Journey.new(nil)
+      @history << journey.record(end_station)
+      message = "Fine incurred. Trip costed £#{journey.fare}"
+      deduct(journey.fare)
+      @journey = nil
+      message
+    end
   end
 
   private
 
   def limit_reached?(amount)
     @balance + amount > BALANCE_LIMIT
-  end
-
-  def record_journey(end_station)
-    @journey.complete(end_station)
-    @journeys[ num_journies ] = [
-      journey.entry_station, journey.entry_zone,
-      journey.exit_station, journey.exit_zone
-    ]
-    @journey = nil
   end
 
   def low_balance?
@@ -59,21 +66,4 @@ class Oystercard
   def deduct(amount)
     @balance -= amount
   end
-
-  def charge_penalty_in
-    @journey = nil
-    @balance -= fare
-    puts "You've didn't touch out! Charged: £#{PENALTY}"
-  end
-
-  def charge_penalty_out(station)
-    @balance -= fare
-    @journey = Journey.new(station.name, station.zone)
-    puts "You didn't touch in! Charged: £#{PENALTY}"
-  end
-
-  def fare
-     in_journey? ? MINIMUM_FARE : PENALTY
-  end
-
 end

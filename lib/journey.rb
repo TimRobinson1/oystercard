@@ -1,13 +1,20 @@
 class Journey
-  attr_reader :entry_station, :entry_zone, :exit_station, :exit_zone
+  attr_reader :entry_station, :exit_station, :fare
 
-  def initialize(entry_station, entry_zone)
-    @entry_station = entry_station
-    @entry_zone = entry_zone
+  MIN_FARE = 1
+  PENALTY = 6
+
+  def initialize(station)
+    @entry_station = station
+    @fare = PENALTY
   end
 
-  def complete(end_station)
-    @exit_zone = end_station.zone
-    @exit_station = end_station.name
+  def finish(station)
+    @fare = MIN_FARE
+    record(station)
+  end
+
+  def record(station)
+    hash = {:entry_station => @entry_station, :exit_station => station}
   end
 end

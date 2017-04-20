@@ -1,26 +1,30 @@
 require 'journey'
 
 describe Journey do
-  subject(:journey) { described_class.new('Old Street', 1) }
+
   let(:station) { double :station }
+  let(:new_station) { double :new_station }
+  subject(:journey) { described_class.new(station) }
 
-  it 'returns correct entry station' do
-    expect(journey.entry_station).to eq 'Old Street'
+  it 'starts with the penalty fare as default' do
+    expect(journey.fare).to eq Journey::PENALTY
   end
 
-  it 'returns correct entry zone' do
-    expect(journey.entry_zone).to eq 1
+  it 'correctly records station on initialization' do
+    expect(journey.entry_station).to eq station
   end
 
-  it 'records exit zone' do
-    allow(station).to receive_messages(:name => "Old Street", :zone => 1)
-    journey.complete(station)
-    expect(journey.exit_zone).to eq 1
+  describe '#record_journey' do
+    it 'returns new finished journey as hash' do
+      hash = {:entry_station => station, :exit_station => new_station}
+      expect(journey.record(new_station)).to eq hash
+    end
   end
 
-  it 'records exit station' do
-    allow(station).to receive_messages(:name => "Old Street", :zone => 1)
-    journey.complete(station)
-    expect(journey.exit_station).to eq 'Old Street'
+  describe '#finish' do
+    it 'sets the fare to minimum' do
+      journey.finish(station)
+      expect(journey.fare).to eq Journey::MIN_FARE
+    end
   end
 end

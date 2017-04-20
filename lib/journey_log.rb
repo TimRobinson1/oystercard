@@ -1,3 +1,0 @@
-class JourneyLog
-
-end

@@ -18,8 +18,8 @@ describe Oystercard do
       expect(card.balance).to eq 0
     end
 
-    it 'with no journeys' do
-      expect(card.journeys).to be_empty
+    it 'with no history' do
+      expect(card.history).to be_empty
     end
   end
 
@@ -61,10 +61,6 @@ describe Oystercard do
       expect(card).to be_in_journey
     end
 
-    it 'here' do
-      expect(card.touch_in(station)).to be_kind_of Journey
-    end
-
     it 'raises error if current balance is below minimum' do
       card.top_up(-30)
       message = 'Balance too low to travel'
@@ -100,18 +96,9 @@ describe Oystercard do
       expect(card.in_journey?).to be false
     end
 
-    it 'records entry and exit stations as one journey' do
-      allow(exit_station).to receive_messages(:name => "Aldgate East", :zone => 3)
-      card.touch_in(station)
-      card.touch_out(exit_station)
-      hash = { card.num_journies => [ journey.entry_station, journey.entry_zone, journey.exit_station, journey.exit_zone ] }
-      expect(card.journeys).to eq hash
-    end
-
     it 'charges penalty when touching out without touching in' do
       card.touch_out(station)
-      expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::PENALTY - Oystercard::MINIMUM_FARE)
+      expect { card.touch_out(station) }.to change { card.balance }.by(-Oystercard::PENALTY)
     end
-
   end
 end
